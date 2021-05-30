@@ -1,10 +1,10 @@
-// +heroku goVersion go1.15
+// +heroku goVersion go1.16
 
 module github.com/jamessouth/clean-tablet
 
-go 1.15
+go 1.16
 
 require (
-	github.com/google/go-cmp v0.5.4
+	github.com/google/go-cmp v0.5.6
 	github.com/gorilla/websocket v1.4.2
 )
