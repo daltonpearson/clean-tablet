@@ -8,17 +8,7 @@
 
 This is a clone of Blank Slate, a party game, which you can learn more about [here](https://theop.games/products/game/blank-slate/).  It is a simple and fun game and my family has several physical copies.  I played for the first time at Thanksgiving 2019 and thought it would make a good software project.  I built the front end with React and the back end with Go and I have deployed it on Heroku.  3 to 8 players.
 
---------------------------------------------------------------------------------------------------------------------------
-
-#### TODO:
-
-1.  continue adding tests
-2.  continue refactoring backend
-3.  allow for multiple games
-4.  add words
-5.  submit random word if player can't think of anything
-6.  show a player's score change per round before the updated scoreboard is revealed
-7.  improve answer compare function
+Rebuilding on AWS [here](https://github.com/jamessouth/aws-clean-tablet).
 
 --------------------------------------------------------------------------------------------------------------------------
 
