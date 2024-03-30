@@ -1,62 +1,18 @@
 import { useState, useEffect, useReducer } from 'react';
-
-
-function reducer(
-    state, {
-      type,
-      name,
-      players,
-      winners,
-      word,
-    }) {
-    switch (type) {
-    case 'player':
-      return {
-        ...state,
-        playerName: name
-      };
-    case 'players':
-      return {
-        ...state,
-        oldWord: state.newWord,
-        players,
-        showAnswers: !!state.newWord
-      };
-    case 'winners': {
-      const win = winners.includes(state.playerName) ? 'YOU WON!!' : 'YOU LOST!!';
-      return {
-        ...state,
-        h1Text: win
-      };
-    }
-    case 'word':
-      return {
-        ...state,
-        newWord: word,
-        showAnswers: false
-      };
-    default:
-      throw new Error('Reducer action type not recognized');
-    }
-  }
-
-
+import StateReducer from '../reducers/appState';
 
 const initialState = {
-    h1Text: 'CLEAN TABLET',
-    newWord: '',
-    oldWord: '',
-    playerName: '',
-    players: [],
-    showAnswers: false,
-  };
-
+  h1Text: 'CLEAN TABLET',
+  newWord: '',
+  oldWord: '',
+  playerName: '',
+  players: [],
+  showAnswers: false,
+};
 
 const ws = new WebSocket(import.meta.env.VITE_WS);
 
-
-function useAppState() {
-
+function UseAppState() {
   const [answered, setAnswered] = useState(false);
   const [connected, setConnected] = useState(false);
   const [dupeName, setDupeName] = useState(false);
@@ -74,97 +30,101 @@ function useAppState() {
   const [timer, setTimer] = useState(null);
   const [winners, setWinners] = useState('');
   const [
-    {
-      h1Text,
-      newWord,
-      oldWord,
-      playerName,
-      players,
-      showAnswers,
-    },
-    dispatch
-  ] = useReducer(reducer, initialState);
+    { h1Text, newWord, oldWord, playerName, players, showAnswers },
+    dispatch,
+  ] = useReducer(StateReducer, initialState);
 
   useEffect(() => {
-    ws.addEventListener('open', function () {
-      setConnected(true);
-    }, false);
-    
-    ws.addEventListener('message', function (e) {
-      const {
-        message,
-        player,
-        players,
-        time,
-        winners,
-        word
-      } = JSON.parse(e.data);
-    
-      switch (true) {
-      case !!message:
-        switch (message) {
-        case 'duplicate':
-          setDupeName(true);
-          break;
-        case 'invalid':
-          setInvalidInput(true);
-          break;
-        case 'progress':
-          setGameHasBegun(true);
-          setShowStartTimer(true);
-          break;
-        case 'reset':
-          window.location.reload();
-          break;
-        default: // eslint-disable-next-line no-console
-          console.log('no case for this message found: ', message);
+    ws.addEventListener(
+      'open',
+      function () {
+        setConnected(true);
+      },
+      false
+    );
+
+    ws.addEventListener(
+      'message',
+      function (e) {
+        const { message, player, players, time, winners, word } = JSON.parse(
+          e.data
+        );
+
+        switch (true) {
+          case !!message:
+            switch (message) {
+              case 'duplicate':
+                setDupeName(true);
+                break;
+              case 'invalid':
+                setInvalidInput(true);
+                break;
+              case 'progress':
+                setGameHasBegun(true);
+                setShowStartTimer(true);
+                break;
+              case 'reset':
+                window.location.reload();
+                break;
+              default:
+                console.log('no case for this message found: ', message);
+            }
+            break;
+          case !!player: {
+            const { color, name } = player;
+            setPlayerColor(color);
+            dispatch({ type: 'player', name });
+            setHasJoined(true);
+            break;
+          }
+          case !!players:
+            dispatch({ type: 'players', players });
+            setDupeName(false);
+            break;
+          case !!time:
+            setShowStartTimer(true);
+            setShowStartButton(false);
+            setTimer(time - 1);
+            break;
+          case !!winners:
+            dispatch({ type: 'winners', winners });
+            setWinners(winners);
+            dispatch({ type: 'word', word: '' });
+            setTimeout(() => {
+              setShowReset(true);
+            }, 5000);
+            break;
+          case !!word:
+            setPingServer(false);
+            setAnswered(false);
+            setShowSVGTimer(true);
+            dispatch({ type: 'word', word });
+            setShowWords(true);
+            setShowStartTimer(false);
+            break;
+          default:
+            console.log('no case found: ', e.data);
         }
-        break;
-      case !!player: {
-        const { color, name } = player;
-        setPlayerColor(color);
-        dispatch({ type: 'player', name });
-        setHasJoined(true);
-        break;
-      }
-      case !!players:
-        dispatch({ type: 'players', players });
-        setDupeName(false);
-        break;
-      case !!time:
-        setShowStartTimer(true);
-        setShowStartButton(false);
-        setTimer(time - 1);
-        break;
-      case !!winners:
-        dispatch({ type: 'winners', winners });
-        setWinners(winners)
-        dispatch({ type: 'word', word: '' });
-        setTimeout(() => {
-          setShowReset(true);
-        }, 5000);
-        break
-      case !!word:
-        setPingServer(false);
-        setAnswered(false);
-        setShowSVGTimer(true);
-        dispatch({ type: 'word', word });
-        setShowWords(true);
-        setShowStartTimer(false);
-        break;
-      default: // eslint-disable-next-line no-console
-        console.log('no case found: ', e.data);
-      }
-    }, false);
-    
-    ws.addEventListener('error', function (e) { // eslint-disable-next-line no-console
-      console.log(e, Date.now());
-    }, false);
-    
-    ws.addEventListener('close', function () {
-      setConnected(false);
-    }, false);
-    
+      },
+      false
+    );
+
+    ws.addEventListener(
+      'error',
+      function (e) {
+        console.log(e, Date.now());
+      },
+      false
+    );
+
+    ws.addEventListener(
+      'close',
+      function () {
+        setConnected(false);
+      },
+      false
+    );
+
     return function cleanup() {
       ws.close(1000);
     };
@@ -180,23 +140,29 @@ function useAppState() {
 
   function send(text) {
     if (!hasJoined) {
-      ws.send(JSON.stringify({
-        name: text,
-      }));
+      ws.send(
+        JSON.stringify({
+          name: text,
+        })
+      );
     } else {
       setAnswered(true);
       setSubmitSignal(false);
       setShowSVGTimer(false);
-      ws.send(JSON.stringify({
-        answer: text,
-      }));
+      ws.send(
+        JSON.stringify({
+          answer: text,
+        })
+      );
     }
   }
 
   function message(msg) {
-    ws.send(JSON.stringify({
-      message: msg
-    }));
+    ws.send(
+      JSON.stringify({
+        message: msg,
+      })
+    );
   }
 
   return {
@@ -225,9 +191,8 @@ function useAppState() {
     showWords,
     submitSignal,
     timer,
-    winners
+    winners,
   };
-  
 }
 
-export default useAppState
+export default UseAppState;

@@ -1,4 +1,4 @@
-export default function playerSort(crit, dir) {
+function PlayerSort(crit, dir) {
   return function innerSort(p1, p2) {
     if (p1[crit] > p2[crit]) {
       return dir;
@@ -11,5 +11,7 @@ export default function playerSort(crit, dir) {
     } else {
       return -1 * dir;
     }
-  }
+  };
 }
+
+export default PlayerSort;

@@ -1,9 +1,8 @@
-// import React from 'react';
 import PropTypes from 'prop-types';
 import { bg, inv, signin } from '../styles/Form.module.css';
-import useFormState from '../hooks/useFormState';
+import UseFormState from '../hooks/useFormState';
 
-export default function Form({
+function Form({
   answered,
   dupeName,
   hasJoined,
@@ -13,7 +12,6 @@ export default function Form({
   playing,
   submitSignal,
 }) {
-
   const {
     ANSWER_MAX_LENGTH,
     badChar,
@@ -23,54 +21,64 @@ export default function Form({
     isValidInput,
     NAME_MAX_LENGTH,
     setInputText,
-  } = useFormState(
+  } = UseFormState(
     answered,
     hasJoined,
     invalidInput,
     onEnter,
     playing,
-    submitSignal,
+    submitSignal
   );
 
   return (
-    <section className={ signin }>
-      {
-        (invalidInput || !isValidInput) &&
-              <p aria-live="assertive" className={ inv }>{ badChar ? badChar : 'That input'} is not allowed</p>
-      }
-      <label aria-live="assertive" htmlFor="inputbox">{ dupeName ? 'That name is taken!' : playerName ? 'Enter your answer:' : 'Please sign in:'}</label>
+    <section className={signin}>
+      {(invalidInput || !isValidInput) && (
+        <p aria-live="assertive" className={inv}>
+          {badChar ? badChar : 'That input'} is not allowed
+        </p>
+      )}
+      <label aria-live="assertive" htmlFor="inputbox">
+        {dupeName
+          ? 'That name is taken!'
+          : playerName
+          ? 'Enter your answer:'
+          : 'Please sign in:'}
+      </label>
       <input
         id="inputbox"
         autoComplete="off"
         autoFocus
-        ref={ inputBox }
-        value={ inputText }
+        ref={inputBox}
+        value={inputText}
         spellCheck="false"
-        onKeyPress={ ({ key }) => {
+        onKeyPress={({ key }) => {
           if (key == 'Enter' && !disableSubmit) {
             onEnter(inputText.slice(0, ANSWER_MAX_LENGTH));
             setInputText('');
           }
-        } }
-        onChange={ e => setInputText(e.target.value) }
+        }}
+        onChange={(e) => setInputText(e.target.value)}
         type="text"
-        placeholder={ !dupeName && hasJoined ? `length: 2 - ${ANSWER_MAX_LENGTH}` : `length: 2 - ${NAME_MAX_LENGTH}` }
-        { ...(answered ? { 'readOnly': true } : {}) }
+        placeholder={
+          !dupeName && hasJoined
+            ? `length: 2 - ${ANSWER_MAX_LENGTH}`
+            : `length: 2 - ${NAME_MAX_LENGTH}`
+        }
+        {...(answered ? { readOnly: true } : {})}
       />
-      <span className={ bg }></span>
+      <span className={bg}></span>
       <button
         type="button"
         onClick={() => {
           onEnter(inputText.slice(0, ANSWER_MAX_LENGTH));
           setInputText('');
         }}
-        { ...(disableSubmit ? { 'disabled': true } : {}) }
+        {...(disableSubmit ? { disabled: true } : {})}
       >
         Submit
       </button>
     </section>
   );
-  
 }
 
 Form.propTypes = {
@@ -81,5 +89,7 @@ Form.propTypes = {
   onEnter: PropTypes.func,
   playerName: PropTypes.string,
   playing: PropTypes.bool,
-  submitSignal: PropTypes.bool
-}
+  submitSignal: PropTypes.bool,
+};
+
+export default Form;

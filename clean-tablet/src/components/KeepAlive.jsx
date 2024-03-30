@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export default function KeepAlive({ pingWS }) {
-
+function KeepAlive({ pingWS }) {
   const TIMEOUT = 50000; // heroku dyno times out after 55 seconds
 
   useEffect(() => {
@@ -12,14 +11,14 @@ export default function KeepAlive({ pingWS }) {
 
     return () => {
       clearInterval(ping);
-    }
-
+    };
   }, [pingWS]);
 
   return null;
-  
 }
 
 KeepAlive.propTypes = {
-  pingWS: PropTypes.func
-}
+  pingWS: PropTypes.func,
+};
+
+export default KeepAlive;
