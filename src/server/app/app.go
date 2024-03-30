@@ -3,7 +3,7 @@ package app
 import (
 	"errors"
 	"log"
-	"math/rand"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	re "regexp"
@@ -122,9 +122,6 @@ func checkForDuplicateName(s string, names []string) bool {
 type stringList []string
 
 func (l stringList) shuffleList() (newlist []string) {
-	t := time.Now().UnixNano()
-	rand.Seed(t)
-
 	newlist = append([]string(nil), l...)
 
 	rand.Shuffle(len(newlist), func(i, j int) {
@@ -267,7 +264,6 @@ func sendWords(s, s2 chan bool) {
 		messageChannel <- word{Word: msg}
 		go handleAnswers(s, s2)
 	}
-	return
 }
 
 func serveGame(wl []string, s, s2 chan bool) (ch chan string) {
