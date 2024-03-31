@@ -55,6 +55,7 @@ function UseAppState() {
             switch (message) {
               case 'duplicate':
                 setDupeName(true);
+                setConnected(false);
                 break;
               case 'invalid':
                 setInvalidInput(true);

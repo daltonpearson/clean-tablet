@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	re "regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -79,6 +80,10 @@ var (
 	clients = make(c.Clients)
 	// clientsMu sync.Mutex
 
+	maxConns = 4
+
+	conns = make([]*websocket.Conn, 0, maxConns)
+
 	answerMaxLength = 12
 
 	secondsPerRound = time.Duration(10)
@@ -146,6 +151,16 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 	defer ws.Close()
 
+	if len(conns) >= maxConns {
+		ws.Close()
+	} else {
+		conns = append(conns, ws)
+	}
+	for i, c := range conns {
+		print("wscccc ", i, c, " ")
+	}
+	println()
+
 	for {
 		var msg message
 		err := ws.ReadJSON(&msg)
@@ -157,11 +172,21 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					colorList = append(colorList, sock.Color)
 				}
 				delete(clients, ws)
+				conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
+					return w == ws
+				})
+				println("1", len(conns))
+
 				if len(clients) > 0 {
 					messageChannel <- clients.GetPlayers()
 				}
 			}
 			delete(clients, ws)
+			conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
+				return w == ws
+			})
+			println("2", len(conns))
+
 			if len(clients) == 0 {
 				gameobj.InProgress = false
 				nameList = []string{}
@@ -190,6 +215,11 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 						log.Printf("duplicate name error: %v", err)
 					}
 					delete(clients, ws)
+					conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
+						return w == ws
+					})
+					println("3", len(conns))
+
 					colorList = append(colorList, playerColor)
 				} else {
 					err = ws.WriteJSON(c.PlayerJSON{Player: clients[ws]})
@@ -305,6 +335,11 @@ func handlePlayerMessages() {
 				log.Printf("message channel error: %v", err)
 				client.Close()
 				delete(clients, client)
+				conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
+					return w == client
+				})
+				println("4", len(conns))
+
 			}
 		}
 	}

@@ -16,9 +16,9 @@ var (
 )
 
 func TestFormatWinners(t *testing.T) {
-	onePlayer := Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}
-	twoPlayers := Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}}}
-	threePlayers := Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, Player{Answer: "", Name: "walter", Color: "#80e050", Score: 1}}}
+	onePlayer := Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}
+	twoPlayers := Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 1}, {Answer: "", Name: "sally", Color: "#80e000", Score: 1}}}
+	threePlayers := Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 1}, {Answer: "", Name: "sally", Color: "#80e000", Score: 1}, {Answer: "", Name: "walter", Color: "#80e050", Score: 1}}}
 
 	tests := map[string]struct {
 		pls  Players
@@ -46,8 +46,8 @@ func TestGetPlayers(t *testing.T) {
 		want Players
 	}{
 		"no players":    {cl: Clients{}, want: Players{}},
-		"one player":    {cl: oneClient, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}},
-		"three players": {cl: threeClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 1}, Player{Answer: "", Name: "walter", Color: "#80e050", Score: 2}}}},
+		"one player":    {cl: oneClient, want: Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 1}}}},
+		"three players": {cl: threeClients, want: Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 25}, {Answer: "", Name: "sally", Color: "#80e000", Score: 1}, {Answer: "", Name: "walter", Color: "#80e050", Score: 2}}}},
 	}
 
 	for name, tc := range tests {
@@ -70,9 +70,9 @@ func TestGetWinners(t *testing.T) {
 		want Players
 	}{
 		"no winner":     {cl: oneClient, want: Players{}},
-		"one winner":    {cl: threeClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}}}},
-		"two winners":   {cl: fourClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}}}},
-		"three winners": {cl: fiveClients, want: Players{[]Player{Player{Answer: "", Name: "bill", Color: "#800000", Score: 25}, Player{Answer: "", Name: "sally", Color: "#80e000", Score: 25}, Player{Answer: "", Name: "walter", Color: "#80e050", Score: 25}}}},
+		"one winner":    {cl: threeClients, want: Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 25}}}},
+		"two winners":   {cl: fourClients, want: Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 25}, {Answer: "", Name: "sally", Color: "#80e000", Score: 25}}}},
+		"three winners": {cl: fiveClients, want: Players{[]Player{{Answer: "", Name: "bill", Color: "#800000", Score: 25}, {Answer: "", Name: "sally", Color: "#80e000", Score: 25}, {Answer: "", Name: "walter", Color: "#80e050", Score: 25}}}},
 	}
 
 	for name, tc := range tests {
