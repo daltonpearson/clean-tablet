@@ -74,45 +74,29 @@ type gametime struct {
 	Time int `json:"time"`
 }
 
-const winningScore = 25
+const (
+	answerMaxLength = 12
+	maxConns        = 8
+	secondsPerRound = time.Duration(10)
+	winningScore    = 25
+)
 
 var (
-	clients = make(c.Clients)
-	// clientsMu sync.Mutex
-
-	maxConns = 4
-
-	conns = make([]*websocket.Conn, 0, maxConns)
-
-	answerMaxLength = 12
-
-	secondsPerRound = time.Duration(10)
-
-	messageChannel = make(chan interface{})
-
-	upgrader = websocket.Upgrader{}
-
-	gameobj = game{InProgress: false}
-
-	nameList []string
-
-	blockRegex = re.MustCompile(`(?i)^[a-z '-]+$`)
-
-	sanitizeRegex = re.MustCompile(`(?i)[^a-z '-]`)
-
-	compareRegex = re.MustCompile(`[^a-z]`)
-
+	answerChannel   = make(chan answer, 1)
+	answers         = make(map[string][]*websocket.Conn)
+	blockRegex      = re.MustCompile(`(?i)^[a-z '-]+$`)
+	clients         = make(c.Clients)
+	colorList       = stringList(data.Colors).shuffleList()
+	compareRegex    = re.MustCompile(`[^a-z]`)
+	conns           = make([]*websocket.Conn, 0, maxConns)
+	gameobj         = game{InProgress: false}
+	messageChannel  = make(chan interface{})
+	nameList        = make([]string, 0, 8)
+	numAns          = 0
 	sanitizeMessage = sanitizeMessageFactory(sanitizeRegex)
-
-	colorList = stringList(data.Colors).shuffleList()
-
-	wordList = stringList(data.Words).shuffleList()
-
-	answers = make(map[string][]*websocket.Conn)
-
-	answerChannel = make(chan answer, 1)
-
-	numAns = 0
+	sanitizeRegex   = re.MustCompile(`(?i)[^a-z '-]`)
+	upgrader        = websocket.Upgrader{}
+	wordList        = stringList(data.Words).shuffleList()
 )
 
 func checkForDuplicateName(s string, names []string) bool {
@@ -156,10 +140,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	} else {
 		conns = append(conns, ws)
 	}
-	for i, c := range conns {
-		print("wscccc ", i, c, " ")
-	}
-	println()
 
 	for {
 		var msg message
@@ -175,8 +155,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 				conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
 					return w == ws
 				})
-				println("1", len(conns))
-
 				if len(clients) > 0 {
 					messageChannel <- clients.GetPlayers()
 				}
@@ -185,8 +163,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
 				return w == ws
 			})
-			println("2", len(conns))
-
 			if len(clients) == 0 {
 				gameobj.InProgress = false
 				nameList = []string{}
@@ -218,8 +194,6 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 					conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
 						return w == ws
 					})
-					println("3", len(conns))
-
 					colorList = append(colorList, playerColor)
 				} else {
 					err = ws.WriteJSON(c.PlayerJSON{Player: clients[ws]})
@@ -338,8 +312,6 @@ func handlePlayerMessages() {
 				conns = slices.DeleteFunc(conns, func(w *websocket.Conn) bool {
 					return w == client
 				})
-				println("4", len(conns))
-
 			}
 		}
 	}
