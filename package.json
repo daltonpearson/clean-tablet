@@ -1,20 +1,21 @@
 {
   "name": "clean-tablet",
-  "version": "1.0.0",
-  "description": "clone of Blank Slate, a party game",
-  "main": "index.js",
+  "private": true,
+  "version": "2.0.0",
+  "description": "update of clone of Blank Slate, a party game",
+  "type": "module",
   "scripts": {
-    "build": "webpack --env.ENV=prod --env.WS=wss://clean-tablet.herokuapp.com/ws",
-    "build:local": "webpack --env.ENV=prod --env.WS=ws://localhost:8000/ws",
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 && echo 'Linted!",
+    "preview": "vite preview",
+    "server": "go run server/main.go",
     "cover": "go tool cover -html c.out",
-    "dev": "webpack-dev-server --env.ENV=dev --env.WS=ws://localhost:8000/ws",
-    "lint": "eslint --fix src/front/ && echo 'Linted!'",
-    "local": "heroku local -p 8000",
-    "test:app": "go test -v github.com/jamessouth/clean-tablet/src/server/app",
-    "test:app:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/app",
-    "test:clients": "go test -v github.com/jamessouth/clean-tablet/src/server/clients",
-    "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/src/server/clients",
-    "test:data:words": "go test -v github.com/jamessouth/clean-tablet/src/server/data"
+    "test:app": "go test -v github.com/jamessouth/clean-tablet/server/app",
+    "test:app:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/server/app",
+    "test:clients": "go test -v github.com/jamessouth/clean-tablet/server/clients",
+    "test:clients:coverage": "go test -coverprofile c.out github.com/jamessouth/clean-tablet/server/clients",
+    "test:data:words": "go test -v github.com/jamessouth/clean-tablet/server/data"
   },
   "repository": {
     "type": "git",
@@ -27,33 +28,17 @@
   },
   "homepage": "https://github.com/jamessouth/clean-tablet#readme",
   "dependencies": {
-    "core-js": "^3.6.4",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/polyfill": "^7.8.7",
-    "@babel/preset-env": "^7.9.5",
-    "@babel/preset-react": "^7.9.4",
-    "@babel/register": "^7.9.0",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^5.0.1",
-    "eslint": "^7.14.0",
-    "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^4.0.4",
-    "nyc": "^15.0.1",
-    "riteway": "^6.1.2",
-    "script-ext-html-webpack-plugin": "^2.1.4",
-    "style-loader": "^2.0.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^5.0.4"
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "vite": "^5.2.0"
   }
 }
