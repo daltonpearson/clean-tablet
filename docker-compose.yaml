@@ -1,0 +1,8 @@
+services:
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    ports:
+      - '4000:8000'

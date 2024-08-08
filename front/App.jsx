@@ -111,7 +111,7 @@ function App() {
         <a
           rel="noopener noreferrer"
           target="_blank"
-          href="https://github.com/jamessouth/clean-tablet"
+          href="https://github.com/daltonpearson/clean-tablet"
         >
           GitHub repo (opens in new tab)
         </a>

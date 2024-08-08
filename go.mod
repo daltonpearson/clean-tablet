@@ -1,4 +1,4 @@
-module github.com/jamessouth/clean-tablet
+module github.com/daltonpearson/clean-tablet
 
 go 1.22
 

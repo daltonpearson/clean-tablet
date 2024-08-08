@@ -1,6 +1,6 @@
 package main
 
-import "github.com/jamessouth/clean-tablet/server/app"
+import "github.com/daltonpearson/clean-tablet/server/app"
 
 func main() {
 	app.Init()
