@@ -76,7 +76,7 @@ type gametime struct {
 
 const (
 	answerMaxLength = 12
-	maxConns        = 8
+	maxConns        = 4
 	secondsPerRound = time.Duration(10)
 	winningScore    = 25
 )
@@ -91,7 +91,7 @@ var (
 	conns           = make([]*websocket.Conn, 0, maxConns)
 	gameobj         = game{InProgress: false}
 	messageChannel  = make(chan interface{})
-	nameList        = make([]string, 0, 8)
+	nameList        = make([]string, 0, maxConns)
 	numAns          = 0
 	sanitizeMessage = sanitizeMessageFactory(sanitizeRegex)
 	sanitizeRegex   = re.MustCompile(`(?i)[^a-z '-]`)
