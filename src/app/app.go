@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	c "github.com/daltonpearson/clean-tablet/src/clients"
-	"github.com/daltonpearson/clean-tablet/src/data"
+	c "github.com/daltonpearson/clean-tablet/clients"
+	"github.com/daltonpearson/clean-tablet/data"
 	"github.com/gorilla/websocket"
 )
 
