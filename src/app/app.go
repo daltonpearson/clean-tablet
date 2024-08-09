@@ -26,7 +26,7 @@ func Init() {
 	if !ok {
 		port = "8000"
 	}
-	log.Println("server running on port " + port)
+	log.Println("server running on port test" + port)
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
@@ -52,6 +52,7 @@ func validateName(s string, r *re.Regexp) error {
 	if !r.MatchString(s) {
 		return errors.New("Invalid name: " + s)
 	}
+	log.Println("validate")
 	return nil
 }
 
@@ -176,7 +177,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 
 		switch {
 		case msg.Name != "":
-			msg.Name = "test"
+			msg.Name = "test1"
 			if err = validateName(msg.Name, blockRegex); err != nil {
 				err := ws.WriteJSON(message{Message: "invalid"})
 				if err != nil {

@@ -2,7 +2,7 @@ services:
   nginx:
     restart: always
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.production
       context: ./
     ports:
       - '4000:8000'
