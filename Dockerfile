@@ -1,23 +1,17 @@
 # Start from the latest golang base image
-FROM golang:latest
+FROM golang:latest as builder
 
 # Add Maintainer Info
-LABEL maintainer="James South"
+LABEL maintainer="Dalton Pearson"
 
-# Set the Current Working Directory inside the container
-WORKDIR /
+RUN go install github.com/beego/bee/v2@latest
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY . .
+ENV GO111MODULE=on
+ENV GOFLAGS=-mod=vendor
 
-# Disable Go Modules
-# ENV GO111MODULE=off
+ENV APP_HOME /go/src/clean-tablet
+RUN mkdir -p "$APP_HOME"
 
-# Build the Go app
-RUN go build -o main ./server
-
-# Expose port 8080 to the outside world
-EXPOSE 8080
-
-# Command to run the executable
-CMD ["./main"]
+WORKDIR "$APP_HOME"
+EXPOSE 8010
+CMD ["bee", "run"]

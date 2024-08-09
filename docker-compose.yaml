@@ -6,3 +6,5 @@ services:
       context: ./
     ports:
       - '4000:8000'
+    volumes:
+      - ./src:/go/src/clean-tablet

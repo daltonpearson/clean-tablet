@@ -11,11 +11,11 @@
     "preview": "vite preview",
     "server": "go run server/main.go",
     "cover": "go tool cover -html c.out",
-    "test:app": "go test -v github.com/daltonpearson/clean-tablet/server/app",
-    "test:app:coverage": "go test -coverprofile c.out github.com/daltonpearson/clean-tablet/server/app",
-    "test:clients": "go test -v github.com/daltonpearson/clean-tablet/server/clients",
-    "test:clients:coverage": "go test -coverprofile c.out github.com/daltonpearson/clean-tablet/server/clients",
-    "test:data:words": "go test -v github.com/daltonpearson/clean-tablet/server/data"
+    "test:app": "go test -v clean-tablet/server/app",
+    "test:app:coverage": "go test -coverprofile c.out clean-tablet/server/app",
+    "test:clients": "go test -v clean-tablet/server/clients",
+    "test:clients:coverage": "go test -coverprofile c.out clean-tablet/server/clients",
+    "test:data:words": "go test -v clean-tablet/server/data"
   },
   "repository": {
     "type": "git",

@@ -127,3 +127,8 @@ typings/
 
 # TernJS port file
 .tern-port
+# src/vendor/
+src/vendor/
+!src/vendor/modules.txt
+src/dist/
+
